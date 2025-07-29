@@ -212,17 +212,17 @@ export const streamChat = httpAction(async (ctx, request) => {
       const latestUserMessage = userMessages[userMessages.length - 1];
       
       if (!latestUserMessage) {
-        await chunkAppender("안녕하세요! 무엇을 도와드릴까요?");
+        await chunkAppender("Hello! How can I help you today?");
         await ctx.runMutation(api.chat.markStreamComplete, {
           messageId: message._id,
-          finalContent: "안녕하세요! 무엇을 도와드릴까요?",
+          finalContent: "Hello! How can I help you today?",
         });
         return;
       }
 
       // Simple echo response for testing
       const userContent = latestUserMessage.content;
-      const response = `안녕하세요! "${userContent}"라고 말씀하셨네요. 저는 AI 어시스턴트입니다. 어떻게 도와드릴까요?`;
+      const response = `Hello! You said "${userContent}". I'm an AI assistant. How can I help you?`;
       
       // Stream the response character by character for testing
       for (let i = 0; i < response.length; i++) {
@@ -241,7 +241,7 @@ export const streamChat = httpAction(async (ctx, request) => {
 
     } catch (error) {
       console.error("Chat generation error:", error);
-      const errorMessage = "죄송합니다. 응답 중 오류가 발생했습니다.";
+      const errorMessage = "Sorry, an error occurred while generating the response.";
       await chunkAppender(errorMessage);
       
       // Try to mark the message as complete even on error

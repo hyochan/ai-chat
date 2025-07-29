@@ -1,28 +1,142 @@
-# AI Chat Application
-  
-This is a project built with [Chef](https://chef.convex.dev) using [Convex](https://convex.dev) as its backend.
-  
-This project is connected to the Convex deployment named [`different-elk-176`](https://dashboard.convex.dev/d/different-elk-176).
-  
-## Project structure
-  
-The frontend code is in the `app` directory and is built with [Vite](https://vitejs.dev/).
-  
-The backend code is in the `convex` directory.
-  
-`npm run dev` will start the frontend and backend servers.
+# AI Chat Application with Real-Time Streaming
 
-## App authentication
+A real-time AI chat application built with [Convex](https://convex.dev) and React, featuring ChatGPT-like streaming responses using Convex Components.
 
-Chef apps use [Convex Auth](https://auth.convex.dev/) with Anonymous auth for easy sign in. You may wish to change this before deploying your app.
+This project demonstrates how to build a production-ready chat interface with real-time text streaming, similar to ChatGPT, without dealing with WebSockets or SSE protocols directly.
 
-## Developing and deploying your app
+## Features
 
-Check out the [Convex docs](https://docs.convex.dev/) for more information on how to develop with Convex.
-* If you're new to Convex, the [Overview](https://docs.convex.dev/understanding/) is a good place to start
-* Check out the [Hosting and Deployment](https://docs.convex.dev/production/) docs for how to deploy your app
-* Read the [Best Practices](https://docs.convex.dev/understanding/best-practices/) guide for tips on how to improve you app further
+- 🚀 Real-time streaming text responses
+- 💬 Conversation history management
+- 🔐 Authentication with Convex Auth
+- 🎨 Modern UI with Tailwind CSS
+- 📱 Responsive design
+- 🔄 Persistent chat sessions
+  
+## Tech Stack
 
-## HTTP API
+- **Frontend**: React + TypeScript + Vite
+- **Backend**: Convex (serverless backend platform)
+- **Streaming**: `@convex-dev/persistent-text-streaming` component
+- **Styling**: Tailwind CSS
+- **Authentication**: Convex Auth with anonymous sign-in
 
-User-defined http routes are defined in the `convex/router.ts` file. We split these routes into a separate file from `convex/http.ts` to allow us to prevent the LLM from modifying the authentication routes.
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- A Convex account (sign up at [convex.dev](https://convex.dev))
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/hyochan/ai-chat.git
+cd ai-chat
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up Convex:
+```bash
+npx convex dev
+```
+
+4. In a new terminal, start the development server:
+```bash
+npm run dev
+```
+
+5. Open [http://localhost:5173](http://localhost:5173) in your browser
+
+## Project Structure
+
+```
+├── src/                  # React frontend
+│   ├── components/       # UI components
+│   │   ├── MessageList.tsx    # Chat message display with streaming
+│   │   ├── ChatInput.tsx      # Message input component
+│   │   └── ApiKeyModal.tsx    # API key configuration
+│   └── App.tsx          # Main application component
+├── convex/              # Backend functions
+│   ├── chat.ts          # Chat logic and streaming
+│   ├── auth.ts          # Authentication setup
+│   ├── schema.ts        # Database schema
+│   └── http.ts          # HTTP routes for streaming
+└── package.json         # Dependencies and scripts
+```
+
+## Key Implementation Details
+
+### Streaming Architecture
+
+The app uses `@convex-dev/persistent-text-streaming` to handle real-time text streaming:
+
+1. **Backend**: When a message is sent, a unique `streamId` is created
+2. **Streaming**: The `/chat-stream` HTTP endpoint streams responses character by character
+3. **Frontend**: The `useStream` hook subscribes to updates and displays them in real-time
+
+### Core Components
+
+- **StreamingMessage**: Displays messages with real-time streaming animation
+- **MessageList**: Manages the chat conversation display
+- **ChatInput**: Handles user input and message sending
+
+### Authentication
+
+The app uses [Convex Auth](https://auth.convex.dev/) with anonymous authentication for easy sign-in. You can modify this to add other authentication providers like Google, GitHub, etc.
+
+## Configuration
+
+### API Keys
+
+The app supports two modes:
+1. **Built-in AI**: Uses a limited free tier (default)
+2. **Custom OpenAI API Key**: Users can provide their own API key for full access
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```env
+VITE_CONVEX_URL=<your-convex-deployment-url>
+```
+
+## Deployment
+
+### Deploy to Production
+
+1. Build the app:
+```bash
+npm run build
+```
+
+2. Deploy to Convex:
+```bash
+npx convex deploy
+```
+
+3. Deploy the frontend to your preferred hosting service (Vercel, Netlify, etc.)
+
+### Hosting Options
+
+- **Frontend**: Any static hosting service (Vercel, Netlify, Cloudflare Pages)
+- **Backend**: Automatically hosted by Convex
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Resources
+
+- [Convex Documentation](https://docs.convex.dev/)
+- [Convex Components](https://www.convex.dev/components)
+- [Persistent Text Streaming Component](https://www.convex.dev/components/persistent-text-streaming)
+
+## License
+
+This project is open source and available under the MIT License.
